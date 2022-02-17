@@ -75,6 +75,9 @@ namespace ArchitectZad2
         public override async Task<CarReply> UpdateCar(CarUpdateRequest request, ServerCallContext context)
         {
             var car = await cars.Cars.FindAsync(request.Id);
+            
+            
+
             car.Color = request.ColorId;
             car.Manufacturer = request.ManufacturerId;
             car.Model = request.Model;
@@ -83,14 +86,17 @@ namespace ArchitectZad2
             cars.Cars.Update(car);
             await cars.SaveChangesAsync();
 
-            var color = await cars.Colors.FindAsync(car.Color);
-            var manuf = await cars.Manufacturers.FindAsync(car.Manufacturer);
+
+            await cars.Entry(car).Reference(c => c.ManufacturerNavigation).LoadAsync();
+            await cars.Entry(car).Reference(c => c.ColorNavigation).LoadAsync();
+            //var color = await cars.Colors.FindAsync(car.Color);
+            //var manuf = await cars.Manufacturers.FindAsync(car.Manufacturer);
             return await Task.FromResult(new CarReply
             {
                 Id = car.Id,
-                Manufacturer = manuf.Name,
+                Manufacturer = car.ManufacturerNavigation.Name,
                 Model = car.Model,
-                Color = color.Name,
+                Color = car.ColorNavigation.Name,
                 Price = (float)car.Price,
                 ManufacturerId = car.Manufacturer.GetValueOrDefault(),
                 ColorId = car.Color.GetValueOrDefault()
