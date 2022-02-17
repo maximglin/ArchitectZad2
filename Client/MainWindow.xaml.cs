@@ -24,7 +24,14 @@ namespace Client
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = new CarsVM(new CarsRepository());
+            this.DataContext = new CarsVM(this.Resources["CarsRepo"] as CarsRepository);
+        }
+
+
+        private void DataGrid_InitializingNewItem(object sender, InitializingNewItemEventArgs e)
+        {
+            if (e.NewItem != null)
+                (e.NewItem as CarVM).repo = this.Resources["CarsRepo"] as CarsRepository;
         }
     }
 }

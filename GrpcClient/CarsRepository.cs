@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Grpc.Net.Client;
 
 namespace GrpcClient
@@ -25,6 +26,24 @@ namespace GrpcClient
             return client.GetCars(new Empty()).ResponseStream.ToAsyncEnumerable();
         }
 
+        public async Task<CarReply> AddCar(CarUpdateRequest car)
+        {
+            return await client.AddCarAsync(car);
+        }
+        public async Task<CarReply> UpdateCar(CarUpdateRequest car)
+        {
+            return await client.UpdateCarAsync(car);
+        }
 
+
+        public IAsyncEnumerable<ColorReply> GetColors()
+        {
+            return client.GetColors(new Empty()).ResponseStream.ToAsyncEnumerable();
+        }
+
+        public IAsyncEnumerable<ManufacturerReply> GetManufacturers()
+        {
+            return client.GetManufacturers(new Empty()).ResponseStream.ToAsyncEnumerable();
+        }
     }
 }

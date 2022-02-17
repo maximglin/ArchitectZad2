@@ -8,6 +8,10 @@ package cars;
 service Cars {
   
   rpc GetCars (Empty) returns (stream CarReply);
+  rpc AddCar (CarUpdateRequest) returns (CarReply);
+  rpc UpdateCar (CarUpdateRequest) returns (CarReply);
+  rpc GetColors (Empty) returns (stream ColorReply);
+  rpc GetManufacturers (Empty) returns (stream ManufacturerReply);
 }
 
 message Empty
@@ -18,9 +22,34 @@ message Empty
 message CarReply 
 {
   int32 Id = 1;
-  string Manufacturer = 2;
+  int32 ManufacturerId = 2;
+  string Manufacturer = 3;
+  string Model = 4;
+  int32 ColorId = 5;
+  string Color = 6;
+  float Price = 7;
+}
+
+message CarUpdateRequest
+{
+  int32 Id = 1;
+  int32 ManufacturerId = 2;
   string Model = 3;
-  string Color = 4;
+  int32 ColorId = 4;
   float Price = 5;
 }
 
+message ColorReply
+{
+	int32 Id = 1;
+	string Name = 2;
+	string Code = 3;
+}
+
+
+message ManufacturerReply
+{
+	int32 Id = 1;
+	string Name = 2;
+	string Country = 3;
+}
