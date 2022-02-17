@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option csharp_namespace = "ArchitectZad2";
+
+package cars;
+
+// The greeting service definition.
+service Cars {
+  
+  rpc GetCars (Empty) returns (stream CarReply);
+}
+
+message Empty
+{
+
+}
+
+message CarReply 
+{
+  int32 Id = 1;
+  string Manufacturer = 2;
+  string Model = 3;
+  string Color = 4;
+  float Price = 5;
+}
+
