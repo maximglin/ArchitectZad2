@@ -34,6 +34,11 @@ namespace GrpcClient
         {
             return await client.UpdateCarAsync(car);
         }
+        public async Task<CarReply> RemoveCar(CarUpdateRequest car)
+        {
+            return await client.RemoveCarAsync(car);
+        }
+
 
 
         public IAsyncEnumerable<ColorReply> GetColors()

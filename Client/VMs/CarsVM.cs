@@ -42,6 +42,16 @@ namespace Client
             Cars.CollectionChanged += (sender, e) =>
             {
                 OnPropertyChanged(nameof(Cars));
+                if(e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
+                {
+                    var items = e.OldItems;
+                    Task.Run(async () =>
+                    {
+                        foreach (var item in items)
+                            if((item as CarVM).Id.HasValue)
+                                await repo.RemoveCar(new CarUpdateRequest() { Id = (item as CarVM).Id.Value });
+                    });
+                }
             };
             Colors.CollectionChanged += (sender, e) =>
             {

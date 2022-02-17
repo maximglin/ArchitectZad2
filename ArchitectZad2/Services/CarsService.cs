@@ -120,5 +120,25 @@ namespace ArchitectZad2
                     Country = m.Country
                 });
         }
+
+        public override async Task<CarReply> RemoveCar(CarUpdateRequest request, ServerCallContext context)
+        {
+            var car = await cars.Cars.FindAsync(request.Id);
+            cars.Cars.Remove(car);
+            await cars.SaveChangesAsync();
+
+            var color = await cars.Colors.FindAsync(car.Color);
+            var manuf = await cars.Manufacturers.FindAsync(car.Manufacturer);
+            return await Task.FromResult(new CarReply
+            {
+                Id = car.Id,
+                Manufacturer = manuf.Name,
+                Model = car.Model,
+                Color = color.Name,
+                Price = (float)car.Price,
+                ManufacturerId = car.Manufacturer.GetValueOrDefault(),
+                ColorId = car.Color.GetValueOrDefault()
+            });
+        }
     }
 }

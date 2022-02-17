@@ -10,6 +10,8 @@ service Cars {
   rpc GetCars (Empty) returns (stream CarReply);
   rpc AddCar (CarUpdateRequest) returns (CarReply);
   rpc UpdateCar (CarUpdateRequest) returns (CarReply);
+  rpc RemoveCar (CarUpdateRequest) returns (CarReply);
+
   rpc GetColors (Empty) returns (stream ColorReply);
   rpc GetManufacturers (Empty) returns (stream ManufacturerReply);
 }
