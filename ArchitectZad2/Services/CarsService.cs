@@ -146,5 +146,84 @@ namespace ArchitectZad2
                 ColorId = car.Color.GetValueOrDefault()
             });
         }
+
+
+        public override async Task<DataMessage> AddColor(DataMessage request, ServerCallContext context)
+        {
+            var color = new Color()
+            {
+                Name = request.Name,
+                Code = request.Description
+            };
+
+            await cars.Colors.AddAsync(color);
+            await cars.SaveChangesAsync();
+
+            request.Id = color.Id;
+
+            return await Task.FromResult(request);
+        }
+        public override async Task<DataMessage> UpdateColor(DataMessage request, ServerCallContext context)
+        {
+            var color = await cars.Colors.FindAsync(request.Id);
+            color.Name = request.Name;
+            color.Code = request.Description;
+
+            cars.Colors.Update(color);
+            await cars.SaveChangesAsync();
+
+
+            return await Task.FromResult(request);
+        }
+
+        public override async Task<DataMessage> AddManufacturer(DataMessage request, ServerCallContext context)
+        {
+            var manuf = new Manufacturer()
+            {
+                Name = request.Name,
+                Country = request.Description
+            };
+
+            await cars.Manufacturers.AddAsync(manuf);
+            await cars.SaveChangesAsync();
+
+            request.Id = manuf.Id;
+
+            return await Task.FromResult(request);
+        }
+
+        public override async Task<DataMessage> UpdateManufacturer(DataMessage request, ServerCallContext context)
+        {
+            var manuf = await cars.Manufacturers.FindAsync(request.Id);
+            manuf.Name = request.Name;
+            manuf.Country = request.Description;
+
+            cars.Manufacturers.Update(manuf);
+            await cars.SaveChangesAsync();
+
+
+            return await Task.FromResult(request);
+        }
+
+
+        public override async Task<DataMessage> RemoveColor(DataMessage request, ServerCallContext context)
+        {
+            var color = await cars.Colors.FindAsync(request.Id);
+            cars.Cars.RemoveRange(cars.Cars.Where(c => c.Color == color.Id));
+            cars.Colors.Remove(color);
+            await cars.SaveChangesAsync();
+
+            return await Task.FromResult(request);
+        }
+
+        public override async Task<DataMessage> RemoveManufacturer(DataMessage request, ServerCallContext context)
+        {
+            var manuf = await cars.Manufacturers.FindAsync(request.Id);
+            cars.Cars.RemoveRange(cars.Cars.Where(c => c.Manufacturer == manuf.Id));
+            cars.Manufacturers.Remove(manuf);
+            await cars.SaveChangesAsync();
+
+            return await Task.FromResult(request);
+        }
     }
 }

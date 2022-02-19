@@ -12,49 +12,75 @@
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
-        <DataGrid ItemsSource="{Binding Cars}" InitializingNewItem="DataGrid_InitializingNewItem" AutoGenerateColumns="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Path=Model}" Header="Модель"/>
-                <DataGridComboBoxColumn Width="100" Header="Производитель">
-                    <DataGridComboBoxColumn.ElementStyle>
-                        <Style TargetType="{x:Type ComboBox}">
-                            <Setter Property="ItemsSource" Value="{Binding Path=DataContext.Manufacturers, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
-                            <Setter Property="SelectedValue" Value="{Binding ManufacturerId}" />
-                            <Setter Property="SelectedValuePath" Value="Id" />
-                            <Setter Property="DisplayMemberPath" Value="Name" />
-                        </Style>
-                    </DataGridComboBoxColumn.ElementStyle>
-                    <DataGridComboBoxColumn.EditingElementStyle>
-                        <Style TargetType="{x:Type ComboBox}">
-                            <Setter Property="ItemsSource" Value="{Binding Path=DataContext.Manufacturers, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
-                            <Setter Property="SelectedValue" Value="{Binding ManufacturerId}" />
-                            <Setter Property="SelectedValuePath" Value="Id" />
-                            <Setter Property="DisplayMemberPath" Value="Name" />
-                        </Style>
-                    </DataGridComboBoxColumn.EditingElementStyle>
-                </DataGridComboBoxColumn>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="410"></ColumnDefinition>
+            <ColumnDefinition Width="auto" MinWidth="200"></ColumnDefinition>
+            <ColumnDefinition Width="auto" MinWidth="200"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <GroupBox Header="Машынки" Padding="10" Margin="10" Grid.Column="0">
+            <DataGrid ItemsSource="{Binding Cars}" InitializingNewItem="DataGrid_InitializingNewItem" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Path=Model}" Header="Модель"/>
+                    <DataGridComboBoxColumn Width="100" Header="Производитель">
+                        <DataGridComboBoxColumn.ElementStyle>
+                            <Style TargetType="{x:Type ComboBox}">
+                                <Setter Property="ItemsSource" Value="{Binding Path=DataContext.ManufacturersSelection, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                                <Setter Property="SelectedValue" Value="{Binding ManufacturerId}" />
+                                <Setter Property="SelectedValuePath" Value="Id" />
+                                <Setter Property="DisplayMemberPath" Value="Name" />
+                            </Style>
+                        </DataGridComboBoxColumn.ElementStyle>
+                        <DataGridComboBoxColumn.EditingElementStyle>
+                            <Style TargetType="{x:Type ComboBox}">
+                                <Setter Property="ItemsSource" Value="{Binding Path=DataContext.ManufacturersSelection, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                                <Setter Property="SelectedValue" Value="{Binding ManufacturerId}" />
+                                <Setter Property="SelectedValuePath" Value="Id" />
+                                <Setter Property="DisplayMemberPath" Value="Name" />
+                            </Style>
+                        </DataGridComboBoxColumn.EditingElementStyle>
+                    </DataGridComboBoxColumn>
 
-                <DataGridComboBoxColumn Width="100" Header="Цвет">
-                    <DataGridComboBoxColumn.ElementStyle>
-                        <Style TargetType="{x:Type ComboBox}">
-                            <Setter Property="ItemsSource" Value="{Binding Path=DataContext.Colors, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
-                            <Setter Property="SelectedValue" Value="{Binding ColorId}" />
-                            <Setter Property="SelectedValuePath" Value="Id" />
-                            <Setter Property="DisplayMemberPath" Value="Name" />
-                        </Style>
-                    </DataGridComboBoxColumn.ElementStyle>
-                    <DataGridComboBoxColumn.EditingElementStyle>
-                        <Style TargetType="{x:Type ComboBox}">
-                            <Setter Property="ItemsSource" Value="{Binding Path=DataContext.Colors, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
-                            <Setter Property="SelectedValue" Value="{Binding ColorId}" />
-                            <Setter Property="SelectedValuePath" Value="Id" />
-                            <Setter Property="DisplayMemberPath" Value="Name" />
-                        </Style>
-                    </DataGridComboBoxColumn.EditingElementStyle>
-                </DataGridComboBoxColumn>
+                    <DataGridComboBoxColumn Width="100" Header="Цвет">
+                        <DataGridComboBoxColumn.ElementStyle>
+                            <Style TargetType="{x:Type ComboBox}">
+                                <Setter Property="ItemsSource" Value="{Binding Path=DataContext.ColorsSelection, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                                <Setter Property="SelectedValue" Value="{Binding ColorId}" />
+                                <Setter Property="SelectedValuePath" Value="Id" />
+                                <Setter Property="DisplayMemberPath" Value="Name" />
+                            </Style>
+                        </DataGridComboBoxColumn.ElementStyle>
+                        <DataGridComboBoxColumn.EditingElementStyle>
+                            <Style TargetType="{x:Type ComboBox}">
+                                <Setter Property="ItemsSource" Value="{Binding Path=DataContext.ColorsSelection, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                                <Setter Property="SelectedValue" Value="{Binding ColorId}" />
+                                <Setter Property="SelectedValuePath" Value="Id" />
+                                <Setter Property="DisplayMemberPath" Value="Name" />
+                            </Style>
+                        </DataGridComboBoxColumn.EditingElementStyle>
+                    </DataGridComboBoxColumn>
 
-                <DataGridTextColumn Binding="{Binding Path=Price}" Header="Цена"/>
-            </DataGrid.Columns>
-        </DataGrid>
+                    <DataGridTextColumn Binding="{Binding Path=Price}" Header="Цена"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+
+        <GroupBox Header="Производители" Padding="10" Margin="10" Grid.Column="1">
+            <DataGrid ItemsSource="{Binding Manufacturers}" AutoGenerateColumns="False" InitializingNewItem="DataGrid_InitializingNewItem_1">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Path=Name}" Header="Название"/>
+                    <DataGridTextColumn Binding="{Binding Path=Country}" Header="Страна"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+
+        <GroupBox Header="Цвета" Padding="10" Margin="10" Grid.Column="2">
+            <DataGrid ItemsSource="{Binding Colors}" AutoGenerateColumns="False" InitializingNewItem="DataGrid_InitializingNewItem_1">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Path=Name}" Header="Название"/>
+                    <DataGridTextColumn Binding="{Binding Path=Code}" Header="Код"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+
     </Grid>
 </Window>
