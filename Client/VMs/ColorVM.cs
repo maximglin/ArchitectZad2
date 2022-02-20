@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using GrpcClient;
 
 namespace Client
 {
-    public class ColorVM : DescriptionVMBase
+    class ColorVM : DescriptionVMBase
     {
         public ColorVM() { }
         public ColorVM(CarsRepository repo, int id, string name, string code)

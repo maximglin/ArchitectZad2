@@ -37,7 +37,7 @@ namespace Client
         private void DataGrid_InitializingNewItem_1(object sender, InitializingNewItemEventArgs e)
         {
             if (e.NewItem != null)
-                (e.NewItem as CarsVM.DescriptionVM).repo = this.Resources["CarsRepo"] as CarsRepository;
+                (e.NewItem as DescriptionVMBase).repo = this.Resources["CarsRepo"] as CarsRepository;
         }
     }
 }
