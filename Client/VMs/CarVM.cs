@@ -10,9 +10,9 @@ namespace Client
 {
     class CarVM : BaseVM
     {
-        public CarsRepository repo;
+        public IRepository<CarReply, CarUpdateRequest> repo;
         public CarVM() { }
-        public CarVM(CarsRepository repository, int id, int manufid, int colid, string model, float price)
+        public CarVM(IRepository<CarReply, CarUpdateRequest> repository, int id, int manufid, int colid, string model, float price)
         {
             repo = repository;
             this.id = id;
@@ -37,7 +37,7 @@ namespace Client
                 {
                     if (id == null)
                     {
-                        updatedData = await repo.AddCar(new CarUpdateRequest()
+                        updatedData = await repo.AddEntity(new CarUpdateRequest()
                         {
                             ManufacturerId = manufacturerId.Value,
                             ColorId = colorId.Value,
@@ -55,7 +55,7 @@ namespace Client
                     updatedData.Price != price
                     ))
                     {
-                        updatedData = await repo.UpdateCar(new CarUpdateRequest()
+                        updatedData = await repo.UpdateEntity(new CarUpdateRequest()
                         {
                             Id = id.Value,
                             ManufacturerId = manufacturerId.Value,

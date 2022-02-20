@@ -11,7 +11,7 @@ namespace Client
     class ColorVM : DescriptionVMBase
     {
         public ColorVM() { }
-        public ColorVM(CarsRepository repo, int id, string name, string code)
+        public ColorVM(IRepository<DataMessage, DataMessage> repo, int id, string name, string code)
             : base(repo, id, name, code)
         {
 
@@ -20,11 +20,11 @@ namespace Client
 
         protected override async Task<DataMessage> Addition(DataMessage request)
         {
-            return await repo.AddColor(request);
+            return await repo.AddEntity(request);
         }
         protected override async Task<DataMessage> Updation(DataMessage request)
         {
-            return await repo.UpdateColor(request);
+            return await repo.UpdateEntity(request);
         }
     }
 }

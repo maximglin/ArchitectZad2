@@ -5,7 +5,7 @@ using Grpc.Net.Client;
 
 namespace GrpcClient
 {
-    public class CarsRepository : IDisposable
+    public class CarsRepository : IDisposable, IRepository<CarReply, CarUpdateRequest>
     {
         GrpcChannel channel;
         Cars.CarsClient client;
@@ -21,63 +21,24 @@ namespace GrpcClient
         }
 
 
-        public IAsyncEnumerable<CarReply> GetCars()
+        public IAsyncEnumerable<CarReply> GetAll()
         {
             return client.GetCars(new Empty()).ResponseStream.ToAsyncEnumerable();
         }
 
-        public async Task<CarReply> AddCar(CarUpdateRequest car)
+        public async Task<CarReply> AddEntity(CarUpdateRequest car)
         {
             return await client.AddCarAsync(car);
         }
-        public async Task<CarReply> UpdateCar(CarUpdateRequest car)
+        public async Task<CarReply> UpdateEntity(CarUpdateRequest car)
         {
             return await client.UpdateCarAsync(car);
         }
-        public async Task<CarReply> RemoveCar(CarUpdateRequest car)
+        public async Task<CarReply> RemoveEntity(CarUpdateRequest car)
         {
             return await client.RemoveCarAsync(car);
         }
 
 
-
-        public IAsyncEnumerable<ColorReply> GetColors()
-        {
-            return client.GetColors(new Empty()).ResponseStream.ToAsyncEnumerable();
-        }
-
-        public IAsyncEnumerable<ManufacturerReply> GetManufacturers()
-        {
-            return client.GetManufacturers(new Empty()).ResponseStream.ToAsyncEnumerable();
-        }
-
-
-        public async Task<DataMessage> AddColor(DataMessage color)
-        {
-            return await client.AddColorAsync(color);
-        }
-        public async Task<DataMessage> UpdateColor(DataMessage color)
-        {
-            return await client.UpdateColorAsync(color);
-        }
-        public async Task<DataMessage> RemoveColor(DataMessage color)
-        {
-            return await client.RemoveColorAsync(color);
-        }
-
-
-
-        public async Task<DataMessage> AddManufacturer(DataMessage manuf)
-        {
-            return await client.AddManufacturerAsync(manuf);
-        }
-        public async Task<DataMessage> UpdateManufacturer(DataMessage manuf)
-        {
-            return await client.UpdateManufacturerAsync(manuf);
-        }
-        public async Task<DataMessage> RemoveManufacturer(DataMessage manuf)
-        {
-            return await client.RemoveManufacturerAsync(manuf);
-        }
     }
 }

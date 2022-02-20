@@ -5,18 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client" xmlns:GrcpClient="clr-namespace:GrpcClient;assembly=GrpcClient"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        SizeToContent="Width"
+        Closed="Window_Closed"
+        Title="MainWindow" Height="450" Width="850">
     <Window.Resources>
         <ResourceDictionary>
             <GrcpClient:CarsRepository x:Key="CarsRepo"></GrcpClient:CarsRepository>
+            <GrcpClient:ColorsRepository x:Key="ColorsRepo"></GrcpClient:ColorsRepository>
+            <GrcpClient:ManufacturersRepository x:Key="ManufacturersRepo"></GrcpClient:ManufacturersRepository>
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" MinWidth="410"></ColumnDefinition>
+            <ColumnDefinition Width="auto" MinWidth="410"></ColumnDefinition>
+            <ColumnDefinition Width="auto"></ColumnDefinition>
             <ColumnDefinition Width="auto" MinWidth="200"></ColumnDefinition>
-            <ColumnDefinition Width="auto" MinWidth="200"></ColumnDefinition>
+            <ColumnDefinition Width="auto"></ColumnDefinition>
+            <ColumnDefinition Width="*" MinWidth="200"></ColumnDefinition>
         </Grid.ColumnDefinitions>
+
+        <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3" ResizeDirection="Columns" ResizeBehavior="PreviousAndCurrent" MinWidth="3" MaxWidth="3"
+        HorizontalAlignment="Center" VerticalAlignment="Stretch"></GridSplitter>
+        <GridSplitter Grid.Column="3" ShowsPreview="False" Width="3" ResizeDirection="Columns" MinWidth="3" MaxWidth="3"
+        HorizontalAlignment="Center" VerticalAlignment="Stretch"></GridSplitter>
+
         <GroupBox Header="Машынки" Padding="10" Margin="10" Grid.Column="0">
             <DataGrid ItemsSource="{Binding Cars}" InitializingNewItem="DataGrid_InitializingNewItem" AutoGenerateColumns="False">
                 <DataGrid.Columns>
@@ -64,7 +76,7 @@
             </DataGrid>
         </GroupBox>
 
-        <GroupBox Header="Производители" Padding="10" Margin="10" Grid.Column="1">
+        <GroupBox Header="Производители" Padding="10" Margin="10" Grid.Column="2">
             <DataGrid ItemsSource="{Binding Manufacturers}" AutoGenerateColumns="False" InitializingNewItem="DataGrid_InitializingNewItem_1">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Path=Name}" Header="Название"/>
@@ -73,8 +85,8 @@
             </DataGrid>
         </GroupBox>
 
-        <GroupBox Header="Цвета" Padding="10" Margin="10" Grid.Column="2">
-            <DataGrid ItemsSource="{Binding Colors}" AutoGenerateColumns="False" InitializingNewItem="DataGrid_InitializingNewItem_1">
+        <GroupBox Header="Цвета" Padding="10" Margin="10" Grid.Column="4">
+            <DataGrid ItemsSource="{Binding Colors}" AutoGenerateColumns="False" InitializingNewItem="DataGrid_InitializingNewItem_2">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Path=Name}" Header="Название"/>
                     <DataGridTextColumn Binding="{Binding Path=Code}" Header="Код"/>

@@ -103,27 +103,27 @@ namespace ArchitectZad2
             });
         }
 
-        public override async Task GetColors(Empty request, IServerStreamWriter<ColorReply> responseStream, ServerCallContext context)
+        public override async Task GetColors(Empty request, IServerStreamWriter<DataMessage> responseStream, ServerCallContext context)
         {
             var colors = cars.Colors.AsAsyncEnumerable();
             await foreach (var col in colors)
-                await responseStream.WriteAsync(new ColorReply
+                await responseStream.WriteAsync(new DataMessage
                 {
                     Id = col.Id,
                     Name = col.Name,
-                    Code = col.Code
+                    Description = col.Code
                 });
         }
 
-        public override async Task GetManufacturers(Empty request, IServerStreamWriter<ManufacturerReply> responseStream, ServerCallContext context)
+        public override async Task GetManufacturers(Empty request, IServerStreamWriter<DataMessage> responseStream, ServerCallContext context)
         {
             var manufs = cars.Manufacturers.AsAsyncEnumerable();
             await foreach (var m in manufs)
-                await responseStream.WriteAsync(new ManufacturerReply
+                await responseStream.WriteAsync(new DataMessage
                 {
                     Id = m.Id,
                     Name = m.Name,
-                    Country = m.Country
+                    Description = m.Country
                 });
         }
 

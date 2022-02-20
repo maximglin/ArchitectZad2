@@ -13,31 +13,17 @@ namespace Client
 {
     class CarsVM : BaseVM
     {
-        CarsRepository repo;
+        IRepository<CarReply, CarUpdateRequest> carsRepo;
+        IRepository<DataMessage, DataMessage> colorsRepo;
+        IRepository<DataMessage, DataMessage> manufsRepo;
 
-        SemaphoreSlim sem = new SemaphoreSlim(1, 1);
-        private async Task UpdateCars()
+        public CarsVM(IRepository<CarReply, CarUpdateRequest> repository, IRepository<DataMessage, DataMessage> colorsRepository, 
+            IRepository<DataMessage, DataMessage> manufacturersRepository)
         {
-            await sem.WaitAsync();
-            await Application.Current.Dispatcher.InvokeAsync(() => Cars.Clear());
-            await foreach (var car in repo.GetCars())
-                await Application.Current.Dispatcher.InvokeAsync(() => Cars.Add(new CarVM(
-                    repo, 
-                    car.Id,
-                    car.ManufacturerId,
-                    car.ColorId,
-                    car.Model,
-                    car.Price) 
-                {
-                    Manufacturer = car.Manufacturer,
-                    Color = car.Color,
-                }));
-            sem.Release();
-        }
+            carsRepo = repository;
+            colorsRepo = colorsRepository;
+            manufsRepo = manufacturersRepository;
 
-        public CarsVM(CarsRepository repository)
-        {
-            repo = repository;
             Cars.CollectionChanged += (sender, e) =>
             {
                 OnPropertyChanged(nameof(Cars));
@@ -48,7 +34,7 @@ namespace Client
                     {
                         foreach (var item in items)
                             if((item as CarVM).Id.HasValue)
-                                await repo.RemoveCar(new CarUpdateRequest() { Id = (item as CarVM).Id.Value });
+                                await carsRepo.RemoveEntity(new CarUpdateRequest() { Id = (item as CarVM).Id.Value });
                     });
                 }
             };
@@ -66,7 +52,7 @@ namespace Client
                     {
                         foreach (var item in items)
                             if ((item as DescriptionVMBase).Id.HasValue)
-                                await repo.RemoveColor(new DataMessage() { Id = (item as DescriptionVMBase).Id.Value });
+                                await colorsRepo.RemoveEntity(new DataMessage() { Id = (item as DescriptionVMBase).Id.Value });
                         await UpdateCars();
                     });
                 }
@@ -84,7 +70,7 @@ namespace Client
                     {
                         foreach (var item in items)
                             if ((item as DescriptionVMBase).Id.HasValue)
-                                await repo.RemoveManufacturer(new DataMessage() { Id = (item as DescriptionVMBase).Id.Value });
+                                await manufsRepo.RemoveEntity(new DataMessage() { Id = (item as DescriptionVMBase).Id.Value });
                         await UpdateCars();
                     });
                 }
@@ -95,17 +81,17 @@ namespace Client
             {
                 await sem.WaitAsync();
                 await Application.Current.Dispatcher.InvokeAsync(() => Colors.Clear());
-                await foreach (var col in repo.GetColors())
+                await foreach (var col in colorsRepo.GetAll())
                 {
-                    var cVM = new ColorVM(repo, col.Id, col.Name, col.Code);
+                    var cVM = new ColorVM(colorsRepo, col.Id, col.Name, col.Description);
                     //await Application.Current.Dispatcher.InvokeAsync(() => Colors.Add(cVM));
                     await Application.Current.Dispatcher.InvokeAsync(() => Colors.Add(cVM));
                 }
 
                 await Application.Current.Dispatcher.InvokeAsync(() => Manufacturers.Clear());
-                await foreach (var m in repo.GetManufacturers())
+                await foreach (var m in manufsRepo.GetAll())
                 {
-                    var mVM = new ManufacturerVM(repo, m.Id, m.Name, m.Country);
+                    var mVM = new ManufacturerVM(manufsRepo, m.Id, m.Name, m.Description);
                     //await Application.Current.Dispatcher.InvokeAsync(() => Manufacturers.Add(mVM));
                     await Application.Current.Dispatcher.InvokeAsync(() => Manufacturers.Add(mVM));
                 }
@@ -114,6 +100,27 @@ namespace Client
 
                 await UpdateCars();
             });//.ContinueWith(async (o) => { await UpdateCars(); }, TaskScheduler.Default);
+        }
+
+
+        SemaphoreSlim sem = new SemaphoreSlim(1, 1);
+        private async Task UpdateCars()
+        {
+            await sem.WaitAsync();
+            await Application.Current.Dispatcher.InvokeAsync(() => Cars.Clear());
+            await foreach (var car in carsRepo.GetAll())
+                await Application.Current.Dispatcher.InvokeAsync(() => Cars.Add(new CarVM(
+                    carsRepo,
+                    car.Id,
+                    car.ManufacturerId,
+                    car.ColorId,
+                    car.Model,
+                    car.Price)
+                {
+                    Manufacturer = car.Manufacturer,
+                    Color = car.Color,
+                }));
+            sem.Release();
         }
 
         public ObservableCollection<CarVM> Cars { get; } = new ObservableCollection<CarVM>();

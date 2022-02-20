@@ -10,9 +10,9 @@ namespace Client
 {
     abstract class DescriptionVMBase : BaseVM
     {
-        public CarsRepository repo;
+        public IRepository<DataMessage, DataMessage> repo;
         public DescriptionVMBase() { }
-        public DescriptionVMBase(CarsRepository repo, int id, string name, string desc)
+        public DescriptionVMBase(IRepository<DataMessage, DataMessage> repo, int id, string name, string desc)
         {
             this.repo = repo;
             this.id = id;

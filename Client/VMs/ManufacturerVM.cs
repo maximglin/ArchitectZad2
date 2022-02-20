@@ -10,7 +10,7 @@ namespace Client
     class ManufacturerVM : DescriptionVMBase
     {
         public ManufacturerVM() { }
-        public ManufacturerVM(CarsRepository repo, int id, string name, string country)
+        public ManufacturerVM(IRepository<DataMessage, DataMessage> repo, int id, string name, string country)
             : base(repo, id, name, country)
         {
 
@@ -20,11 +20,11 @@ namespace Client
 
         protected override async Task<DataMessage> Addition(DataMessage request)
         {
-            return await repo.AddManufacturer(request);
+            return await repo.AddEntity(request);
         }
         protected override async Task<DataMessage> Updation(DataMessage request)
         {
-            return await repo.UpdateManufacturer(request);
+            return await repo.UpdateEntity(request);
         }
     }
 }
