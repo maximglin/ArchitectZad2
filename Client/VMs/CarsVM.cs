@@ -65,8 +65,8 @@ namespace Client
                     Task.Run(async () =>
                     {
                         foreach (var item in items)
-                            if ((item as DescriptionVM).Id.HasValue)
-                                await repo.RemoveColor(new DataMessage() { Id = (item as DescriptionVM).Id.Value });
+                            if ((item as DescriptionVMBase).Id.HasValue)
+                                await repo.RemoveColor(new DataMessage() { Id = (item as DescriptionVMBase).Id.Value });
                         await UpdateCars();
                     });
                 }
@@ -83,8 +83,8 @@ namespace Client
                     Task.Run(async () =>
                     {
                         foreach (var item in items)
-                            if ((item as DescriptionVM).Id.HasValue)
-                                await repo.RemoveManufacturer(new DataMessage() { Id = (item as DescriptionVM).Id.Value });
+                            if ((item as DescriptionVMBase).Id.HasValue)
+                                await repo.RemoveManufacturer(new DataMessage() { Id = (item as DescriptionVMBase).Id.Value });
                         await UpdateCars();
                     });
                 }
@@ -120,106 +120,13 @@ namespace Client
 
 
 
-        public abstract class DescriptionVM : BaseVM
-        {
-            public CarsRepository repo;
-            public DescriptionVM() { }
-            public DescriptionVM(CarsRepository repo, int id, string name, string desc)
-            {
-                this.repo = repo;
-                this.id = id;
-                this.name = name;
-                this.desc = desc;
-
-                updatedData = new DataMessage() { Id = id, Name = name, Description = desc };
-            }
-
-            protected int? id = null;
-            protected string name = "", desc = "";
-            public int? Id { get => id; set { id = value; OnPropertyChanged(nameof(Id)); Update(); } }
-            public string Name { get => name; set { name = value; OnPropertyChanged(nameof(Name)); Update(); } }
-            public string Description { get => desc; set { desc = value; OnPropertyChanged(nameof(Description)); Update(); } }
-
-
-            protected abstract Task<DataMessage> Addition(DataMessage request);
-            protected abstract Task<DataMessage> Updation(DataMessage request);
-            DataMessage updatedData;
-            SemaphoreSlim sem = new SemaphoreSlim(1, 1);
-            void Update()
-            {
-                Task.Run(async () =>
-                {
-                    await sem.WaitAsync();
-
-                    if (id == null)
-                    {
-                        updatedData = await Addition(new DataMessage()
-                        {
-                            Name = this.Name,
-                            Description = this.Description
-                        });
-                        this.Id = updatedData.Id;
-                    }
-                    else if(updatedData != null && (
-                    updatedData.Name != name ||
-                    updatedData.Description != desc
-                    ))
-                    {
-                        updatedData = await Updation(new DataMessage()
-                        {
-                            Id = id.Value,
-                            Name = this.Name,
-                            Description = this.Description
-                        });
-                    }
-                    sem.Release();
-                });
-            }
-        }
-        public class ManufacturerVM : DescriptionVM
-        {
-            public ManufacturerVM() { }
-            public ManufacturerVM(CarsRepository repo, int id, string name, string country)
-                : base(repo, id, name, country)
-            {
-
-            }
-
-            public string Country { get => Description; set { Description = value; OnPropertyChanged(nameof(Country)); } }
-
-            protected  override async Task<DataMessage> Addition(DataMessage request)
-            {
-                return await repo.AddManufacturer(request);
-            }
-            protected override async Task<DataMessage> Updation(DataMessage request)
-            {
-                return await repo.UpdateManufacturer(request);
-            }
-        }
+        
 
         public IEnumerable<ManufacturerVM> ManufacturersSelection => Manufacturers.Where(m => m.Id != null);
 
         public ObservableCollection<ManufacturerVM> Manufacturers { get; } = new ObservableCollection<ManufacturerVM>();
 
-        public class ColorVM : DescriptionVM
-        {
-            public ColorVM() { }
-            public ColorVM(CarsRepository repo, int id, string name, string code)
-                : base(repo, id, name, code)
-            {
-
-            }
-            public string Code { get => Description; set { Description = value; OnPropertyChanged(nameof(Code)); } }
-
-            protected override async Task<DataMessage> Addition(DataMessage request)
-            {
-                return await repo.AddColor(request);
-            }
-            protected override async Task<DataMessage> Updation(DataMessage request)
-            {
-                return await repo.UpdateColor(request);
-            }
-        }
+        
         public IEnumerable<ColorVM> ColorsSelection => Colors.Where(c => c.Id != null);
         public ObservableCollection<ColorVM> Colors { get; } = new ObservableCollection<ColorVM>();
     }
