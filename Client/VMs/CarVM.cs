@@ -20,11 +20,14 @@ namespace Client
             this.colorId = colid;
             this.model = model;
             this.price = price;
+
+            updatedData = new CarReply() { Id = id, ManufacturerId = manufid, ColorId = colid, Model = model, Price = price };
         }
 
 
         SemaphoreSlim sem = new SemaphoreSlim(1, 1);
 
+        CarReply updatedData;
         void UpdateCar()
         {
             Task.Run(async () =>
@@ -34,20 +37,25 @@ namespace Client
                 {
                     if (id == null)
                     {
-                        var car = await repo.AddCar(new CarUpdateRequest()
+                        updatedData = await repo.AddCar(new CarUpdateRequest()
                         {
                             ManufacturerId = manufacturerId.Value,
                             ColorId = colorId.Value,
                             Model = model,
                             Price = price
                         });
-                        this.Id = car.Id;
-                        Color = car.Color;
-                        Manufacturer = car.Manufacturer;
+                        this.Id = updatedData.Id;
+                        Color = updatedData.Color;
+                        Manufacturer = updatedData.Manufacturer;
                     }
-                    else
+                    else if(updatedData != null && (
+                    updatedData.ColorId != colorId ||
+                    updatedData.ManufacturerId != manufacturerId ||
+                    updatedData.Model != model ||
+                    updatedData.Price != price
+                    ))
                     {
-                        var car = await repo.UpdateCar(new CarUpdateRequest()
+                        updatedData = await repo.UpdateCar(new CarUpdateRequest()
                         {
                             Id = id.Value,
                             ManufacturerId = manufacturerId.Value,
@@ -55,8 +63,8 @@ namespace Client
                             Model = model,
                             Price = price
                         });
-                        Color = car.Color;
-                        Manufacturer = car.Manufacturer;
+                        Color = updatedData.Color;
+                        Manufacturer = updatedData.Manufacturer;
                     }
 
                 }

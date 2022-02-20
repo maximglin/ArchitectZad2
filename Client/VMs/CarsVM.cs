@@ -130,6 +130,8 @@ namespace Client
                 this.id = id;
                 this.name = name;
                 this.desc = desc;
+
+                updatedData = new DataMessage() { Id = id, Name = name, Description = desc };
             }
 
             protected int? id = null;
@@ -141,6 +143,7 @@ namespace Client
 
             protected abstract Task<DataMessage> Addition(DataMessage request);
             protected abstract Task<DataMessage> Updation(DataMessage request);
+            DataMessage updatedData;
             SemaphoreSlim sem = new SemaphoreSlim(1, 1);
             void Update()
             {
@@ -150,16 +153,19 @@ namespace Client
 
                     if (id == null)
                     {
-                        var response = await Addition(new DataMessage()
+                        updatedData = await Addition(new DataMessage()
                         {
                             Name = this.Name,
                             Description = this.Description
                         });
-                        this.Id = response.Id;
+                        this.Id = updatedData.Id;
                     }
-                    else
+                    else if(updatedData != null && (
+                    updatedData.Name != name ||
+                    updatedData.Description != desc
+                    ))
                     {
-                        var response = await Updation(new DataMessage()
+                        updatedData = await Updation(new DataMessage()
                         {
                             Id = id.Value,
                             Name = this.Name,
