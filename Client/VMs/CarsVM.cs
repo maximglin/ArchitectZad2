@@ -14,11 +14,11 @@ namespace Client
     class CarsVM : BaseVM
     {
         IRepository<CarReply, CarUpdateRequest> carsRepo;
-        IRepository<DataMessage, DataMessage> colorsRepo;
-        IRepository<DataMessage, DataMessage> manufsRepo;
+        IRepository<ColorMessage, ColorMessage> colorsRepo;
+        IRepository<ManufacturerMessage, ManufacturerMessage> manufsRepo;
 
-        public CarsVM(IRepository<CarReply, CarUpdateRequest> repository, IRepository<DataMessage, DataMessage> colorsRepository, 
-            IRepository<DataMessage, DataMessage> manufacturersRepository)
+        public CarsVM(IRepository<CarReply, CarUpdateRequest> repository, IRepository<ColorMessage, ColorMessage> colorsRepository, 
+            IRepository<ManufacturerMessage, ManufacturerMessage> manufacturersRepository)
         {
             carsRepo = repository;
             colorsRepo = colorsRepository;
@@ -52,7 +52,7 @@ namespace Client
                     {
                         foreach (var item in items)
                             if ((item as DescriptionVMBase).Id.HasValue)
-                                await colorsRepo.RemoveEntity(new DataMessage() { Id = (item as DescriptionVMBase).Id.Value });
+                                await colorsRepo.RemoveEntity(new ColorMessage() { Id = (item as DescriptionVMBase).Id.Value });
                         await UpdateCars();
                     });
                 }
@@ -70,7 +70,7 @@ namespace Client
                     {
                         foreach (var item in items)
                             if ((item as DescriptionVMBase).Id.HasValue)
-                                await manufsRepo.RemoveEntity(new DataMessage() { Id = (item as DescriptionVMBase).Id.Value });
+                                await manufsRepo.RemoveEntity(new ManufacturerMessage() { Id = (item as DescriptionVMBase).Id.Value });
                         await UpdateCars();
                     });
                 }

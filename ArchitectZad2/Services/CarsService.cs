@@ -103,11 +103,11 @@ namespace ArchitectZad2
             });
         }
 
-        public override async Task GetColors(Empty request, IServerStreamWriter<DataMessage> responseStream, ServerCallContext context)
+        public override async Task GetColors(Empty request, IServerStreamWriter<ColorMessage> responseStream, ServerCallContext context)
         {
             var colors = cars.Colors.AsAsyncEnumerable();
             await foreach (var col in colors)
-                await responseStream.WriteAsync(new DataMessage
+                await responseStream.WriteAsync(new ColorMessage
                 {
                     Id = col.Id,
                     Name = col.Name,
@@ -115,11 +115,11 @@ namespace ArchitectZad2
                 });
         }
 
-        public override async Task GetManufacturers(Empty request, IServerStreamWriter<DataMessage> responseStream, ServerCallContext context)
+        public override async Task GetManufacturers(Empty request, IServerStreamWriter<ManufacturerMessage> responseStream, ServerCallContext context)
         {
             var manufs = cars.Manufacturers.AsAsyncEnumerable();
             await foreach (var m in manufs)
-                await responseStream.WriteAsync(new DataMessage
+                await responseStream.WriteAsync(new ManufacturerMessage
                 {
                     Id = m.Id,
                     Name = m.Name,
@@ -148,7 +148,7 @@ namespace ArchitectZad2
         }
 
 
-        public override async Task<DataMessage> AddColor(DataMessage request, ServerCallContext context)
+        public override async Task<ColorMessage> AddColor(ColorMessage request, ServerCallContext context)
         {
             var color = new Color()
             {
@@ -163,7 +163,7 @@ namespace ArchitectZad2
 
             return await Task.FromResult(request);
         }
-        public override async Task<DataMessage> UpdateColor(DataMessage request, ServerCallContext context)
+        public override async Task<ColorMessage> UpdateColor(ColorMessage request, ServerCallContext context)
         {
             var color = await cars.Colors.FindAsync(request.Id);
             color.Name = request.Name;
@@ -176,7 +176,7 @@ namespace ArchitectZad2
             return await Task.FromResult(request);
         }
 
-        public override async Task<DataMessage> AddManufacturer(DataMessage request, ServerCallContext context)
+        public override async Task<ManufacturerMessage> AddManufacturer(ManufacturerMessage request, ServerCallContext context)
         {
             var manuf = new Manufacturer()
             {
@@ -192,7 +192,7 @@ namespace ArchitectZad2
             return await Task.FromResult(request);
         }
 
-        public override async Task<DataMessage> UpdateManufacturer(DataMessage request, ServerCallContext context)
+        public override async Task<ManufacturerMessage> UpdateManufacturer(ManufacturerMessage request, ServerCallContext context)
         {
             var manuf = await cars.Manufacturers.FindAsync(request.Id);
             manuf.Name = request.Name;
@@ -206,7 +206,7 @@ namespace ArchitectZad2
         }
 
 
-        public override async Task<DataMessage> RemoveColor(DataMessage request, ServerCallContext context)
+        public override async Task<ColorMessage> RemoveColor(ColorMessage request, ServerCallContext context)
         {
             var color = await cars.Colors.FindAsync(request.Id);
             cars.Cars.RemoveRange(cars.Cars.Where(c => c.Color == color.Id));
@@ -216,7 +216,7 @@ namespace ArchitectZad2
             return await Task.FromResult(request);
         }
 
-        public override async Task<DataMessage> RemoveManufacturer(DataMessage request, ServerCallContext context)
+        public override async Task<ManufacturerMessage> RemoveManufacturer(ManufacturerMessage request, ServerCallContext context)
         {
             var manuf = await cars.Manufacturers.FindAsync(request.Id);
             cars.Cars.RemoveRange(cars.Cars.Where(c => c.Manufacturer == manuf.Id));

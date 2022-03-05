@@ -8,13 +8,19 @@ using GrpcClient;
 
 namespace Client
 {
+    public class DataMessage
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+
+
     abstract class DescriptionVMBase : BaseVM
     {
-        public IRepository<DataMessage, DataMessage> repo;
         public DescriptionVMBase() { }
-        public DescriptionVMBase(IRepository<DataMessage, DataMessage> repo, int id, string name, string desc)
+        public DescriptionVMBase(int id, string name, string desc)
         {
-            this.repo = repo;
             this.id = id;
             this.name = name;
             this.desc = desc;

@@ -12,16 +12,16 @@ service Cars {
   rpc UpdateCar (CarUpdateRequest) returns (CarReply);
    rpc RemoveCar (CarUpdateRequest) returns (CarReply);
 
-  rpc GetColors (Empty) returns (stream DataMessage);
-  rpc GetManufacturers (Empty) returns (stream DataMessage);
+  rpc GetColors (Empty) returns (stream ColorMessage);
+  rpc GetManufacturers (Empty) returns (stream ManufacturerMessage);
 
-  rpc AddColor (DataMessage) returns (DataMessage);
-  rpc UpdateColor (DataMessage) returns (DataMessage);
-  rpc RemoveColor (DataMessage) returns (DataMessage);
+  rpc AddColor (ColorMessage) returns (ColorMessage);
+  rpc UpdateColor (ColorMessage) returns (ColorMessage);
+  rpc RemoveColor (ColorMessage) returns (ColorMessage);
 
-  rpc AddManufacturer (DataMessage) returns (DataMessage);
-  rpc UpdateManufacturer (DataMessage) returns (DataMessage);
-  rpc RemoveManufacturer (DataMessage) returns (DataMessage);
+  rpc AddManufacturer (ManufacturerMessage) returns (ManufacturerMessage);
+  rpc UpdateManufacturer (ManufacturerMessage) returns (ManufacturerMessage);
+  rpc RemoveManufacturer (ManufacturerMessage) returns (ManufacturerMessage);
 }
 
 message Empty
@@ -51,7 +51,14 @@ message CarUpdateRequest
 
 
 
-message DataMessage
+message ColorMessage
+{
+	int32 id = 1;
+	string Name = 2;
+	string Description = 3;
+}
+
+message ManufacturerMessage
 {
 	int32 id = 1;
 	string Name = 2;

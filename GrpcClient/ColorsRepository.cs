@@ -6,7 +6,7 @@ using Grpc.Net.Client;
 
 namespace GrpcClient
 {
-    public class ColorsRepository : IRepository<DataMessage, DataMessage>, IDisposable
+    public class ColorsRepository : IRepository<ColorMessage, ColorMessage>, IDisposable
     {
 
         GrpcChannel channel;
@@ -17,20 +17,20 @@ namespace GrpcClient
             client = new Cars.CarsClient(channel);
         }
 
-        public IAsyncEnumerable<DataMessage> GetAll()
+        public IAsyncEnumerable<ColorMessage> GetAll()
         {
             return client.GetColors(new Empty()).ResponseStream.ToAsyncEnumerable();
         }
 
-        public async Task<DataMessage> AddEntity(DataMessage color)
+        public async Task<ColorMessage> AddEntity(ColorMessage color)
         {
             return await client.AddColorAsync(color);
         }
-        public async Task<DataMessage> UpdateEntity(DataMessage color)
+        public async Task<ColorMessage> UpdateEntity(ColorMessage color)
         {
             return await client.UpdateColorAsync(color);
         }
-        public async Task<DataMessage> RemoveEntity(DataMessage color)
+        public async Task<ColorMessage> RemoveEntity(ColorMessage color)
         {
             return await client.RemoveColorAsync(color);
         }

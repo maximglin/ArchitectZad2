@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using GrpcClient;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Client
 {
     class CarVM : BaseVM
     {
         public IRepository<CarReply, CarUpdateRequest> repo;
-        public CarVM() { }
+        public CarVM() { this.repo = (App.Current as App).ServiceProvider.GetRequiredService<IRepository<CarReply, CarUpdateRequest>>(); }
         public CarVM(IRepository<CarReply, CarUpdateRequest> repository, int id, int manufid, int colid, string model, float price)
         {
             repo = repository;

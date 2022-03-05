@@ -8,13 +8,6 @@
         SizeToContent="Width"
         Closed="Window_Closed"
         Title="MainWindow" Height="450" Width="850">
-    <Window.Resources>
-        <ResourceDictionary>
-            <GrcpClient:CarsRepository x:Key="CarsRepo"></GrcpClient:CarsRepository>
-            <GrcpClient:ColorsRepository x:Key="ColorsRepo"></GrcpClient:ColorsRepository>
-            <GrcpClient:ManufacturersRepository x:Key="ManufacturersRepo"></GrcpClient:ManufacturersRepository>
-        </ResourceDictionary>
-    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" MinWidth="410"></ColumnDefinition>
